@@ -1,0 +1,305 @@
+/* E:\fitness-tracker\src\pages\Dashboard.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+/* Fitness-themed variables */
+:root {
+  --bg: linear-gradient(135deg, #f9f7f4, #e6e2d6);
+  --text: #1a2b3c;
+  --gradient: linear-gradient(135deg, #ff5733, #00c4b4, #ff8c00, #ff2e63);
+  --gradient-hover: linear-gradient(135deg, #ff2e63, #ff8c00, #00c4b4, #ff5733);
+  --gradient-text: linear-gradient(135deg, #ff5733, #00c4b4);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-blur: blur(15px);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --accent-orange: #ff5733; /* Energetic orange */
+  --accent-green: #00c4b4; /* Vibrant lime green */
+  --accent-blue: #1e90ff; /* Dynamic blue */
+  --accent-pink: #ff2e63; /* Coral pink */
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 12px 36px rgba(255, 87, 51, 0.4);
+  --inner-glow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.ft-dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg);
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.5s ease;
+}
+
+/* Background pattern inspired by fitness theme */
+.ft-dashboard-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' opacity='0.1'%3E%3Ccircle cx='40' cy='40' r='10' fill='%23ff5733'/%3E%3Ccircle cx='160' cy='40' r='10' fill='%2300c4b4'/%3E%3Ccircle cx='40' cy='160' r='10' fill='%23ff8c00'/%3E%3Ccircle cx='160' cy='160' r='10' fill='%23ff2e63'/%3E%3Cpath d='M40 40 L160 40 M40 160 L160 160 M40 40 L40 160 M160 40 L160 160' stroke='%23ffffff' stroke-width='2' opacity='0.3'/%3E%3C/svg%3E")
+    center center/200px 200px repeat;
+  z-index: -1;
+  animation: floatNodes 20s linear infinite;
+}
+
+.ft-dashboard-title {
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: glowText 2s ease-in-out infinite alternate;
+}
+
+.ft-dashboard-title .ft-icon::before {
+  content: '\f21e'; /* Font Awesome heartbeat icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 2.2rem;
+  color: var(--accent-orange);
+}
+
+.ft-dashboard-subtitle {
+  font-size: 1.3rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text);
+  opacity: 0.9;
+  margin-bottom: 2.5rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.ft-dashboard-subtitle::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: var(--gradient);
+  border-radius: 2px;
+  animation: pulseLine 2s ease infinite;
+}
+
+.ft-nav-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+  max-width: 1200px;
+  width: 100%;
+  justify-content: center;
+}
+
+.ft-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.8rem;
+  border-radius: 16px;
+  text-decoration: none;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 2px solid var(--glass-border);
+  box-shadow: var(--shadow), var(--inner-glow);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  animation: float 5s ease-in-out infinite;
+}
+
+.ft-nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-hover);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease;
+}
+
+.ft-nav-link:hover::before {
+  opacity: 0.3;
+}
+
+.ft-nav-link:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover), var(--inner-glow);
+  border: 2px solid transparent;
+  border-image: var(--gradient-hover) 1;
+  animation-play-state: paused;
+}
+
+.ft-profile-link .ft-nav-icon::before {
+  content: '\f007'; /* Font Awesome user icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: var(--accent-blue);
+}
+
+.ft-workout-link .ft-nav-icon::before {
+  content: '\f44b'; /* Font Awesome dumbbell icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: var(--accent-orange);
+}
+
+.ft-diet-link .ft-nav-icon::before {
+  content: '\f5d1'; /* Font Awesome apple-alt icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: var(--accent-green);
+}
+
+.ft-water-link .ft-nav-icon::before {
+  content: '\f773'; /* Font Awesome water icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: var(--accent-blue);
+}
+
+.ft-log-link .ft-nav-icon::before {
+  content: '\f133'; /* Font Awesome calendar icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: var(--accent-pink);
+}
+
+.ft-nav-icon {
+  font-size: 1.8rem;
+  display: inline-block;
+}
+
+.ft-nav-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.ft-nav-link:hover .ft-nav-text {
+  opacity: 0.9;
+  transform: translateY(-3px);
+}
+
+/* Animations */
+@keyframes floatNodes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 200px 200px;
+  }
+}
+
+@keyframes glowText {
+  0% {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    text-shadow: 0 4px 12px rgba(255, 87, 51, 0.4);
+  }
+}
+
+@keyframes pulseLine {
+  0% {
+    width: 100px;
+    opacity: 0.8;
+  }
+  50% {
+    width: 120px;
+    opacity: 1;
+  }
+  100% {
+    width: 100px;
+    opacity: 0.8;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ft-dashboard-container {
+    padding: 1.5rem;
+  }
+
+  .ft-dashboard-title {
+    font-size: 2.2rem;
+  }
+
+  .ft-dashboard-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .ft-nav-menu {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .ft-nav-link {
+    padding: 1.5rem;
+  }
+
+  .ft-nav-text {
+    font-size: 1.1rem;
+  }
+
+  .ft-nav-icon {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ft-dashboard-title {
+    font-size: 1.8rem;
+  }
+
+  .ft-dashboard-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .ft-nav-link {
+    padding: 1.2rem;
+  }
+
+  .ft-nav-text {
+    font-size: 1rem;
+  }
+
+  .ft-nav-icon {
+    font-size: 1.4rem;
+  }
+}

@@ -1,0 +1,108 @@
+/* E:\fitness-tracker\src\components\WorkoutCard.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Use same variables as Workout.css for consistency */
+:root {
+  --bg: linear-gradient(135deg, #f9f7f4, #e6e2d6);
+  --text: #1a2b3c;
+  --gradient: linear-gradient(135deg, #ff5733, #00c4b4, #ff8c00, #ff2e63);
+  --gradient-hover: linear-gradient(135deg, #ff2e63, #ff8c00, #00c4b4, #ff5733);
+  --gradient-text: linear-gradient(135deg, #ff5733, #00c4b4);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-blur: blur(15px);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --accent-orange: #ff5733;
+  --accent-green: #00c4b4;
+  --accent-blue: #1e90ff;
+  --accent-pink: #ff2e63;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 12px 36px rgba(255, 87, 51, 0.4);
+  --inner-glow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.ft-workout-card {
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 2px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow), var(--inner-glow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ft-workout-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover), var(--inner-glow);
+}
+
+.ft-workout-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-hover);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+.ft-workout-card:hover::before {
+  opacity: 0.3;
+}
+
+.ft-workout-card h4 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 0.5rem 0;
+}
+
+.ft-workout-card p {
+  font-size: 1rem;
+  color: var(--text);
+  margin: 0.3rem 0;
+  opacity: 0.9;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ft-workout-card:hover p {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ft-workout-card {
+    padding: 1.2rem;
+  }
+
+  .ft-workout-card h4 {
+    font-size: 1.2rem;
+  }
+
+  .ft-workout-card p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ft-workout-card {
+    padding: 1rem;
+  }
+
+  .ft-workout-card h4 {
+    font-size: 1.1rem;
+  }
+
+  .ft-workout-card p {
+    font-size: 0.9rem;
+  }
+}

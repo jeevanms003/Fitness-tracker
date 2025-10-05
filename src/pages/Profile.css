@@ -1,0 +1,136 @@
+/* E:\fitness-tracker\src\pages\Profile.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+/* Fitness-themed variables, consistent with other pages */
+:root {
+  --bg: linear-gradient(135deg, #f9f7f4, #e6e2d6);
+  --text: #1a2b3c;
+  --gradient: linear-gradient(135deg, #ff5733, #00c4b4, #ff8c00, #ff2e63);
+  --gradient-hover: linear-gradient(135deg, #ff2e63, #ff8c00, #00c4b4, #ff5733);
+  --gradient-text: linear-gradient(135deg, #ff5733, #00c4b4);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-blur: blur(15px);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --accent-orange: #ff5733; /* Energetic orange */
+  --accent-green: #00c4b4; /* Vibrant lime green */
+  --accent-blue: #1e90ff; /* Dynamic blue */
+  --accent-pink: #ff2e63; /* Coral pink */
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 12px 36px rgba(255, 87, 51, 0.4);
+  --inner-glow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.ft-profile-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg);
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.5s ease;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Background pattern */
+.ft-profile-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' opacity='0.1'%3E%3Ccircle cx='40' cy='40' r='10' fill='%23ff5733'/%3E%3Ccircle cx='160' cy='40' r='10' fill='%2300c4b4'/%3E%3Ccircle cx='40' cy='160' r='10' fill='%23ff8c00'/%3E%3Ccircle cx='160' cy='160' r='10' fill='%23ff2e63'/%3E%3Cpath d='M40 40 L160 40 M40 160 L160 160 M40 40 L40 160 M160 40 L160 160' stroke='%23ffffff' stroke-width='2' opacity='0.3'/%3E%3C/svg%3E")
+    center center/200px 200px repeat;
+  z-index: -1;
+  animation: floatNodes 20s linear infinite;
+}
+
+.ft-profile-title {
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: glowText 2s ease-in-out infinite alternate;
+}
+
+.ft-profile-title::before {
+  content: '\f007'; /* Font Awesome user icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 2.2rem;
+  color: var(--accent-blue);
+}
+
+.ft-profile-form {
+  width: 100%;
+  max-width: 600px;
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow), var(--inner-glow);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.ft-profile-form:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover), var(--inner-glow);
+}
+
+/* Animations */
+@keyframes floatNodes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 200px 200px;
+  }
+}
+
+@keyframes glowText {
+  0% {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    text-shadow: 0 4px 12px rgba(255, 87, 51, 0.4);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ft-profile-container {
+    padding: 1.5rem;
+  }
+
+  .ft-profile-title {
+    font-size: 2.2rem;
+  }
+
+  .ft-profile-form {
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ft-profile-title {
+    font-size: 1.8rem;
+  }
+
+  .ft-profile-form {
+    padding: 1rem;
+  }
+}

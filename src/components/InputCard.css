@@ -1,0 +1,103 @@
+/* E:\fitness-tracker\src\components\InputCard.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Use same variables as Profile.css for consistency */
+:root {
+  --bg: linear-gradient(135deg, #f9f7f4, #e6e2d6);
+  --text: #1a2b3c;
+  --gradient: linear-gradient(135deg, #ff5733, #00c4b4, #ff8c00, #ff2e63);
+  --gradient-hover: linear-gradient(135deg, #ff2e63, #ff8c00, #00c4b4, #ff5733);
+  --gradient-text: linear-gradient(135deg, #ff5733, #00c4b4);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-blur: blur(15px);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --accent-orange: #ff5733;
+  --accent-green: #00c4b4;
+  --accent-blue: #1e90ff;
+  --accent-pink: #ff2e63;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 12px 36px rgba(255, 87, 51, 0.4);
+  --inner-glow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.ft-input-card {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 2px solid var(--glass-border);
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ft-input-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover), var(--inner-glow);
+}
+
+.ft-input-card label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.ft-input-card input {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  border: 2px solid var(--glass-border);
+  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  color: var(--text);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ft-input-card input:focus {
+  outline: none;
+  border: 2px solid var(--accent-blue);
+  box-shadow: var(--shadow-hover);
+}
+
+.ft-input-card input::placeholder {
+  color: var(--text);
+  opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ft-input-card {
+    padding: 0.8rem;
+  }
+
+  .ft-input-card label {
+    font-size: 1rem;
+  }
+
+  .ft-input-card input {
+    padding: 0.6rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ft-input-card {
+    padding: 0.6rem;
+  }
+
+  .ft-input-card label {
+    font-size: 0.95rem;
+  }
+
+  .ft-input-card input {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
