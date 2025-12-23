@@ -6,21 +6,27 @@ import { Footprints, Plus, Minus } from 'lucide-react';
 import { useAppContext } from "../context/AppProvider";
 
 export default function Steps() {
-    const { stats, updateSteps, goals } = useAppContext();
-    const [localSteps, setLocalSteps] = useState(stats.steps);
+    const { updateSteps, goals, getStatsForDate } = useAppContext();
+    const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+
+    // Fetch stats for the selected date
+    const stats = getStatsForDate(date);
+    const currentSteps = stats.steps || 0;
+
+    const [localSteps, setLocalSteps] = useState(currentSteps);
 
     useEffect(() => {
-        setLocalSteps(stats.steps);
-    }, [stats.steps]);
+        setLocalSteps(currentSteps);
+    }, [currentSteps]);
 
     const handleUpdate = async () => {
-        await updateSteps(parseInt(localSteps) || 0);
+        await updateSteps(parseInt(localSteps) || 0, date);
     };
 
     const adjustSteps = (amount) => {
         const newVal = Math.max((parseInt(localSteps) || 0) + amount, 0);
         setLocalSteps(newVal);
-        updateSteps(newVal);
+        updateSteps(newVal, date);
     };
 
     const progress = Math.min((localSteps / goals.steps) * 100, 100);
@@ -38,6 +44,16 @@ export default function Steps() {
                     <CardDescription className="text-lg">Keep moving to reach your daily goal.</CardDescription>
                 </CardHeader>
                 <CardContent className="relative z-10">
+                    <div className="mb-6 flex justify-center">
+                        <div className="w-1/2">
+                            <Input
+                                type="date"
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                className="bg-secondary/50 border-white/10 text-center"
+                            />
+                        </div>
+                    </div>
                     <div className="py-6">
                         <div className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-600 mb-2 tracking-tighter">
                             {localSteps} <span className="text-2xl text-muted-foreground font-normal ml-2">steps</span>

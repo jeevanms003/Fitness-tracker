@@ -7,7 +7,21 @@ import { Link } from "react-router-dom";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Dashboard() {
-  const { user, stats, goals, workouts } = useAppContext();
+  const { user, stats, goals, workouts, getStatsForDate } = useAppContext();
+
+  // Calculate last 7 days data dynamically
+  const chartData = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    const dateStr = d.toISOString().split('T')[0];
+    const dayStats = getStatsForDate(dateStr);
+    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+    return {
+      name: dayName,
+      cal: dayStats.caloriesBurned || 0, // Plotting Calories Burned
+      // You could also plot consumed vs burned if you want multiple areas
+    };
+  });
 
   // Dynamic Data from Context
   const dashboardStats = [
@@ -98,15 +112,7 @@ export default function Dashboard() {
           <CardContent className="pl-2">
             <div className="h-[200px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={[
-                  { name: 'Mon', cal: 400 },
-                  { name: 'Tue', cal: 300 },
-                  { name: 'Wed', cal: 500 },
-                  { name: 'Thu', cal: 280 },
-                  { name: 'Fri', cal: 590 },
-                  { name: 'Sat', cal: 320 },
-                  { name: 'Sun', cal: 450 },
-                ]}>
+                <AreaChart data={chartData}>
                   <defs>
                     <linearGradient id="colorCal" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />

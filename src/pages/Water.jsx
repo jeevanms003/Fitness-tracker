@@ -1,20 +1,40 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Droplets, Plus, Minus } from 'lucide-react';
+import { Input } from "@/components/ui/input";
 import { useAppContext } from "../context/AppProvider";
 
 export default function Water() {
-  const { waterIntake, setWaterIntake, goals } = useAppContext();
+  const { setWaterIntake: syncWater, goals, getStatsForDate } = useAppContext();
+  // Note: We renamed setWaterIntake to syncWater in destructure to avoid confusion, 
+  // as we want to call the context method which maps to server sync.
+
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [localWater, setLocalWater] = useState(0);
+
+  // Fetch stats for the selected date
+  const stats = getStatsForDate(date);
+  // We use local state to allow immediate UI updates while valid data syncs, 
+  // OR we can just use stats.waterIntake directly if 'getStatsForDate' is responsive enough (it depends on AppProvider state).
+  // The AppProvider updates 'dailyStatsHistory' optimistically, so 'stats.waterIntake' should be correct immediately.
+  const currentWater = stats.waterIntake || 0;
 
   const addWater = (amount) => {
-    setWaterIntake(prev => Math.min(prev + amount, 10000));
+    const newVal = Math.min(currentWater + amount, 10000);
+    syncWater(newVal, date);
   };
 
   const removeWater = (amount) => {
-    setWaterIntake(prev => Math.max(prev - amount, 0));
+    const newVal = Math.max(currentWater - amount, 0);
+    syncWater(newVal, date);
   };
 
-  const progress = Math.min((waterIntake / goals.water) * 100, 100);
+  const handleManualChange = (val) => {
+    syncWater(val, date);
+  }
+
+  const progress = Math.min((currentWater / goals.water) * 100, 100);
 
   return (
     <div className="max-w-xl mx-auto space-y-8 animate-in fade-in duration-700 pb-20">
@@ -30,11 +50,23 @@ export default function Water() {
           <CardDescription className="text-lg">Stay hydrated to perform at your best.</CardDescription>
         </CardHeader>
         <CardContent className="relative z-10">
+
+          <div className="mb-6 flex justify-center">
+            <div className="w-1/2">
+              <Input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="bg-secondary/50 border-white/10 text-center"
+              />
+            </div>
+          </div>
+
           <div className="py-6 flex justify-center items-center">
             <input
               type="number"
-              value={waterIntake}
-              onChange={(e) => setWaterIntake(parseInt(e.target.value) || 0)}
+              value={currentWater}
+              onChange={(e) => handleManualChange(parseInt(e.target.value) || 0)}
               className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2 tracking-tighter w-48 text-center bg-transparent border-b border-transparent hover:border-white/10 focus:border-cyan-500 focus:outline-none transition-all"
             />
             <span className="text-2xl text-muted-foreground font-normal ml-2 mb-2">ml</span>
@@ -60,7 +92,7 @@ export default function Water() {
             </Button>
           </div>
 
-          <Button variant="ghost" size="sm" onClick={() => setWaterIntake(0)} className="text-xs text-muted-foreground hover:text-white mb-6">
+          <Button variant="ghost" size="sm" onClick={() => handleManualChange(0)} className="text-xs text-muted-foreground hover:text-white mb-6">
             Reset Daily Counter
           </Button>
 
@@ -84,11 +116,11 @@ export default function Water() {
       {/* Visual Cups Visualization */}
       <div className="grid grid-cols-5 md:grid-cols-10 gap-3 justify-items-center opacity-90 p-6 bg-secondary/10 rounded-2xl border border-white/5 backdrop-blur-sm">
         {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className={`relative h-12 w-8 border-2 rounded-md flex items-end justify-center pb-0.5 transition-all duration-500 ${(waterIntake / 250) >= (i + 1)
+          <div key={i} className={`relative h-12 w-8 border-2 rounded-md flex items-end justify-center pb-0.5 transition-all duration-500 ${(currentWater / 250) >= (i + 1)
             ? 'border-cyan-400/50 bg-cyan-900/20 shadow-[0_0_10px_rgba(34,211,238,0.2)]'
             : 'border-muted bg-background/50'
             }`}>
-            <div className={`w-[80%] rounded-sm transition-all duration-700 ease-out ${(waterIntake / 250) >= (i + 1) ? 'h-[80%] bg-cyan-400' : 'h-0 bg-transparent'
+            <div className={`w-[80%] rounded-sm transition-all duration-700 ease-out ${(currentWater / 250) >= (i + 1) ? 'h-[80%] bg-cyan-400' : 'h-0 bg-transparent'
               }`}></div>
           </div>
         ))}
@@ -96,6 +128,6 @@ export default function Water() {
           1 Cell ≈ 250ml
         </p>
       </div>
-    </div >
+    </div>
   );
 }

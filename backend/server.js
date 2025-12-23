@@ -151,26 +151,29 @@ app.delete('/api/meals/:id', async (req, res) => {
 });
 
 // Water & Steps (Manual or Updates)
+// Water & Steps (Manual or Updates)
 app.post('/api/water', async (req, res) => {
-    const { amount } = req.body;
-    const todayStr = new Date().toISOString().split('T')[0];
-    let daily = await DailyStat.findOne({ date: todayStr });
-    if (!daily) daily = new DailyStat({ date: todayStr });
+    const { amount, date } = req.body;
+    const targetDateStr = date ? date : new Date().toISOString().split('T')[0];
+
+    let daily = await DailyStat.findOne({ date: targetDateStr });
+    if (!daily) daily = new DailyStat({ date: targetDateStr });
 
     daily.waterIntake = amount;
     await daily.save();
-    res.json({ waterIntake: daily.waterIntake });
+    res.json({ waterIntake: daily.waterIntake, date: targetDateStr });
 });
 
 app.post('/api/steps', async (req, res) => {
-    const { steps } = req.body;
-    const todayStr = new Date().toISOString().split('T')[0];
-    let daily = await DailyStat.findOne({ date: todayStr });
-    if (!daily) daily = new DailyStat({ date: todayStr });
+    const { steps, date } = req.body;
+    const targetDateStr = date ? date : new Date().toISOString().split('T')[0];
+
+    let daily = await DailyStat.findOne({ date: targetDateStr });
+    if (!daily) daily = new DailyStat({ date: targetDateStr });
 
     daily.steps = steps;
     await daily.save();
-    res.json({ steps: daily.steps });
+    res.json({ steps: daily.steps, date: targetDateStr });
 });
 
 app.get('/api/chart-data', async (req, res) => {

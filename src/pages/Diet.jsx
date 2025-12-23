@@ -8,32 +8,49 @@ import { useAppContext } from '../context/AppProvider';
 export default function Diet() {
   const { meals, addMeal, removeMeal, goals } = useAppContext();
   const [newMeal, setNewMeal] = useState({ name: '', calories: '', protein: '' });
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+
+  // Filter meals for the selected date
+  // Note: meals date string might need careful comparison
+  const dailyMeals = meals.filter(m => {
+    const mealDate = new Date(m.date || Date.now()).toISOString().split('T')[0];
+    return mealDate === date;
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (newMeal.name && newMeal.calories) {
+      // Use selected date but current time for ordering
+      const selected = new Date(date);
+      const now = new Date();
+      selected.setHours(now.getHours(), now.getMinutes());
+
       await addMeal({
         name: newMeal.name,
         calories: parseInt(newMeal.calories),
         protein: parseInt(newMeal.protein || 0),
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        date: new Date().toISOString()
+        time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        date: selected.toISOString()
       });
       setNewMeal({ name: '', calories: '', protein: '' });
     }
   };
 
   const handleQuickAdd = async (name, calories, protein) => {
+    const selected = new Date(date);
+    const now = new Date();
+    selected.setHours(now.getHours(), now.getMinutes());
+
     await addMeal({
       name,
       calories,
       protein,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      date: new Date().toISOString()
+      time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      date: selected.toISOString()
     });
   };
 
-  const totalCalories = meals.reduce((acc, curr) => acc + parseInt(curr.calories || 0), 0);
+  const totalCalories = dailyMeals.reduce((acc, curr) => acc + parseInt(curr.calories || 0), 0);
   const calorieProgress = Math.min((totalCalories / goals.calories) * 100, 100);
 
   return (
@@ -53,15 +70,15 @@ export default function Diet() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4 relative z-10">
-            {meals.length === 0 ? (
+            {dailyMeals.length === 0 ? (
               <div className="text-center py-16 text-muted-foreground border-2 border-dashed border-white/5 rounded-xl bg-black/20">
                 <Utensils className="h-10 w-10 mx-auto mb-3 opacity-30" />
-                <p>No meals logged today.</p>
+                <p>No meals logged for {date === new Date().toISOString().split('T')[0] ? 'today' : 'this date'}.</p>
                 <p className="text-xs mt-1">Add your first meal to get started.</p>
               </div>
             ) : (
               <div className="space-y-3">
-                {meals.map((meal) => (
+                {dailyMeals.map((meal) => (
                   <div key={meal.id || meal._id} className="flex items-center justify-between p-4 border border-white/5 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-all hover:scale-[1.01] hover:shadow-lg group">
                     <div className="flex items-center gap-4">
                       <div className="h-12 w-12 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/20 group-hover:shadow-orange-500/40 transition-shadow">
@@ -116,6 +133,15 @@ export default function Diet() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Date</label>
+                <Input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="bg-secondary/50 border-white/10 focus:border-orange-500/50"
+                />
+              </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Meal Name</label>
                 <Input

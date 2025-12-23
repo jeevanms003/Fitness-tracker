@@ -99,14 +99,41 @@ export const AppProvider = ({ children }) => {
     await axios.delete(`${API_URL}/meals/${id}`);
   };
 
-  const syncWater = async (amount) => {
-    setWaterIntake(amount);
-    await axios.post(`${API_URL}/water`, { amount });
+  const syncWater = async (amount, dateStr = null) => {
+    // Optimistically update dailyStatsHistory
+    const targetDate = dateStr || new Date().toISOString().split('T')[0];
+
+    setDailyStatsHistory(prev => {
+      const existing = prev.find(d => d.date === targetDate);
+      if (existing) {
+        return prev.map(d => d.date === targetDate ? { ...d, waterIntake: amount } : d);
+      } else {
+        return [...prev, { date: targetDate, waterIntake: amount, steps: 0 }];
+      }
+    });
+
+    const isToday = !dateStr || dateStr === new Date().toISOString().split('T')[0];
+    if (isToday) setWaterIntake(amount);
+
+    await axios.post(`${API_URL}/water`, { amount, date: dateStr });
   };
 
-  const updateSteps = async (totalSteps) => {
-    setSteps(totalSteps);
-    await axios.post(`${API_URL}/steps`, { steps: totalSteps });
+  const updateSteps = async (totalSteps, dateStr = null) => {
+    const targetDate = dateStr || new Date().toISOString().split('T')[0];
+
+    setDailyStatsHistory(prev => {
+      const existing = prev.find(d => d.date === targetDate);
+      if (existing) {
+        return prev.map(d => d.date === targetDate ? { ...d, steps: totalSteps } : d);
+      } else {
+        return [...prev, { date: targetDate, steps: totalSteps, waterIntake: 0 }];
+      }
+    });
+
+    const isToday = !dateStr || dateStr === new Date().toISOString().split('T')[0];
+    if (isToday) setSteps(totalSteps);
+
+    await axios.post(`${API_URL}/steps`, { steps: totalSteps, date: dateStr });
   };
 
   const logout = () => {
